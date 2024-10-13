@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Generator</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <h1>Welcome to Accounting Statements Generator!</h1>
+    <div class="button-container">
+    <input type="text" id="wordInput" placeholder="Enter a Journal Entry">
+    <button id="generateButton">Add it to the Journal</button>
+    <button id="generateButton">Generate Journal Entries</button>
+    </div>
+    <p id="output"></p>
+
+    <script>
+        $(document).ready(function() {
+            $('#generateButton').click(function() {
+                var word = $('#wordInput').val();  // Get the input value
+
+                // Make sure the input isn't empty
+                if (word.trim() === "") {
+                    $('#output').text('Please enter a word.');
+                    return;
+                }
+
+                $.ajax({
+                    url: '/generate',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ word: word }),
+                    success: function(response) {
+                        $('#output').text(response.output);  // Display the output
+                    },
+                    error: function(error) {
+                        $('#output').text('An error occurred.');  // Handle error
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
